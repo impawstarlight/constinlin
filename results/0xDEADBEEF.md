@@ -1,0 +1,104 @@
+# TurboFan Constant Inlining Matrix (MASK = 0xDEADBEEF)
+
+Tested on Node.js `v24.19.0` (V8 `13.6.233.17-node.51`, Platform: `linux-x64`)
+
+### CJS: Local (Same File)
+
+| Test File | Inlined? | Target Instruction | Code Size | Notes |
+| :--- | :---: | :--- | :---: | :--- |
+| `01-literal.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `02-func-const.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `03-func-var.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `04-func-let.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `05-top-const.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `06-top-var.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `07-top-let.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+
+### CJS: Internal -> Default Scalar
+
+| Test File | Inlined? | Target Instruction | Code Size | Notes |
+| :--- | :---: | :--- | :---: | :--- |
+| `01-const.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `02-var.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `03-let.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+
+### CJS: Internal -> Named Object
+
+| Test File | Inlined? | Target Instruction | Code Size | Notes |
+| :--- | :---: | :--- | :---: | :--- |
+| `01-destruct-const.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `02-destruct-var.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `03-destruct-let.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `04-prop-const.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `05-prop-var.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `06-prop-let.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+
+### CJS: Cross (require ESM) -> Default Scalar
+
+| Test File | Inlined? | Target Instruction | Code Size | Notes |
+| :--- | :---: | :--- | :---: | :--- |
+| `01-const.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `02-var.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `03-let.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+
+### CJS: Cross (require ESM) -> Named Object
+
+| Test File | Inlined? | Target Instruction | Code Size | Notes |
+| :--- | :---: | :--- | :---: | :--- |
+| `01-destruct-const.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `02-destruct-var.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `03-destruct-let.cjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `04-prop-const.cjs` | ❌ **NO** | `andl r8,rcx` | 364 B | Dynamic context/property load |
+| `05-prop-var.cjs` | ❌ **NO** | `andl r8,rcx` | 364 B | Dynamic context/property load |
+| `06-prop-let.cjs` | ❌ **NO** | `andl r8,rcx` | 364 B | Dynamic context/property load |
+
+### ESM: Local (Same File)
+
+| Test File | Inlined? | Target Instruction | Code Size | Notes |
+| :--- | :---: | :--- | :---: | :--- |
+| `01-literal.mjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `02-func-const.mjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `03-func-var.mjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `04-func-let.mjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `05-top-const.mjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `06-top-var.mjs` | ❌ **NO** | `andl r8,rcx` | 364 B | Dynamic context/property load |
+| `07-top-let.mjs` | ❌ **NO** | `andl r8,rcx` | 424 B | Dynamic context/property load |
+
+### ESM: Internal -> Default Scalar
+
+| Test File | Inlined? | Target Instruction | Code Size | Notes |
+| :--- | :---: | :--- | :---: | :--- |
+| `01-import.mjs` | ❌ **NO** | `andl r8,rcx` | 424 B | Dynamic context/property load |
+| `02-rebind-const.mjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `03-rebind-var.mjs` | ❌ **NO** | `andl r8,rcx` | 364 B | Dynamic context/property load |
+| `04-rebind-let.mjs` | ❌ **NO** | `andl r8,rcx` | 424 B | Dynamic context/property load |
+
+### ESM: Internal -> Named Binding
+
+| Test File | Inlined? | Target Instruction | Code Size | Notes |
+| :--- | :---: | :--- | :---: | :--- |
+| `01-import.mjs` | ❌ **NO** | `andl r8,rcx` | 424 B | Dynamic context/property load |
+| `02-namespace.mjs` | ❌ **NO** | `andl r8,rcx` | 364 B | Dynamic context/property load |
+| `03-rebind-const.mjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `04-rebind-var.mjs` | ❌ **NO** | `andl r8,rcx` | 364 B | Dynamic context/property load |
+| `05-rebind-let.mjs` | ❌ **NO** | `andl r8,rcx` | 424 B | Dynamic context/property load |
+
+### ESM: Cross (import CJS) -> Default Scalar
+
+| Test File | Inlined? | Target Instruction | Code Size | Notes |
+| :--- | :---: | :--- | :---: | :--- |
+| `01-import.mjs` | ❌ **NO** | `andl r8,rcx` | 424 B | Dynamic context/property load |
+| `02-rebind-const.mjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `03-rebind-var.mjs` | ❌ **NO** | `andl r8,rcx` | 364 B | Dynamic context/property load |
+| `04-rebind-let.mjs` | ❌ **NO** | `andl r8,rcx` | 424 B | Dynamic context/property load |
+
+### ESM: Cross (import CJS) -> Named Binding
+
+| Test File | Inlined? | Target Instruction | Code Size | Notes |
+| :--- | :---: | :--- | :---: | :--- |
+| `01-import.mjs` | ❌ **NO** | `andl r8,rcx` | 424 B | Dynamic context/property load |
+| `02-namespace.mjs` | ❌ **NO** | `andl r8,rcx` | 364 B | Dynamic context/property load |
+| `03-rebind-const.mjs` | ✅ **YES** | `andl rdx,0xdeadbeef` | 232 B | Inlined (immediate operand) |
+| `04-rebind-var.mjs` | ❌ **NO** | `andl r8,rcx` | 364 B | Dynamic context/property load |
+| `05-rebind-let.mjs` | ❌ **NO** | `andl r8,rcx` | 424 B | Dynamic context/property load |
+
