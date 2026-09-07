@@ -1,0 +1,10 @@
+{
+  "name": "constinlin",
+  "version": "1.0.0",
+  "description": "TurboFan Constant Inlining Matrix: CJS vs ESM",
+  "type": "module",
+  "scripts": {
+    "matrix": "node scripts/runner.js",
+    "set-mask": "node scripts/set-mask.js"
+  }
+}
