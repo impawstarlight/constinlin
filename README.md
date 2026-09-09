@@ -54,25 +54,45 @@ npm run set-mask 0xFFFF
 
 ```text
 constinlin/
-├── constants/
-│   ├── cjs/             # default.cjs, named.cjs
-│   └── esm/             # default.mjs, named.mjs
-├── functions/           # 50 pure function definition & export modules
-│   ├── cjs/
-│   │   ├── local/       # 7 local lexical scope cases
-│   │   ├── internal/    # default (3 cases), named (6 cases)
-│   │   └── cross/       # require(esm) default (3 cases), named (6 cases)
-│   └── esm/
-│       ├── local/       # 7 local lexical scope cases
-│       ├── internal/    # default (4 cases), named (5 cases)
-│       └── cross/       # import cjs default (4 cases), named (5 cases)
-├── consumers/           # 100 consumer test entrypoints
-│   ├── cjs/             # 50 CJS consumer suites (require functions)
-│   └── esm/             # 50 ESM consumer suites (import functions)
-├── results/             # Generated Markdown matrices (0xFFFF.md, 0xFF.md, etc.)
+├── constants/                             # Layer 1: Constant Source Definitions
+│   ├── cjs/                               # default.cjs, named.cjs
+│   └── esm/                               # default.mjs, named.mjs
+├── functions/                             # Layer 2: 50 pure function definition & export modules
+│   ├── cjs/                               # CJS Functions
+│   │   ├── cjs/                           # CJS Function referencing CJS/Local constant
+│   │   │   ├── local/                     # 7 local lexical scope cases
+│   │   │   ├── default/                   # 3 default require cases
+│   │   │   └── named/                     # 6 named require / destructuring cases
+│   │   └── esm/                           # CJS Function requiring ESM constant
+│   │       ├── default/                   # 3 default require cases
+│   │       └── named/                     # 6 named require / destructuring cases
+│   └── esm/                               # ESM Functions
+│       ├── esm/                           # ESM Function referencing ESM/Local constant
+│       │   ├── local/                     # 7 local lexical scope cases
+│       │   ├── default/                   # 4 default import cases
+│       │   └── named/                     # 5 named import cases
+│       └── cjs/                           # ESM Function importing CJS constant
+│           ├── default/                   # 4 default import cases
+│           └── named/                     # 5 named import cases
+├── consumers/                             # Layer 3: 100 consumer test entrypoints
+│   ├── cjs/                               # 50 CJS consumers (require functions)
+│   │   ├── cjs/                           # Consumes CJS functions
+│   │   │   ├── cjs/ (local, default, named)
+│   │   │   └── esm/ (default, named)
+│   │   └── esm/                           # Consumes ESM functions
+│   │       ├── esm/ (local, default, named)
+│   │       └── cjs/ (default, named)
+│   └── esm/                               # 50 ESM consumers (import functions)
+│       ├── cjs/                           # Consumes CJS functions
+│       │   ├── cjs/ (local, default, named)
+│       │   └── esm/ (default, named)
+│       └── esm/                           # Consumes ESM functions
+│           ├── esm/ (local, default, named)
+│           └── cjs/ (default, named)
+├── results/                               # Generated Markdown matrices (0xFFFF.md, 0xFF.md, etc.)
 ├── scripts/
-│   ├── runner.js        # Automated 3-way analysis runner and disassembly parser
-│   └── set-mask.js      # Utility to update mask across all test cases
+│   ├── runner.js                          # Automated 3-way analysis runner and disassembly parser
+│   └── set-mask.js                        # Utility to update mask across all test cases
 └── package.json
 ```
 

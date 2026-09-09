@@ -1,6 +1,0 @@
-import { mask } from '../../../functions/esm/cross/named/03-rebind-const.mjs';
-
-%PrepareFunctionForOptimization(mask);
-mask(1);
-%OptimizeFunctionOnNextCall(mask);
-mask(2);

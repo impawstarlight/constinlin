@@ -2,275 +2,235 @@
 
 Tested on Node.js `v24.19.0` (V8 `13.6.233.17-node.51`, Platform: `linux-x64`)
 
-**Matrix Structure**: 50 Function Implementations $\times$ 2 Consumer Module Types (CommonJS `.cjs` vs ESM `.mjs`) = **100 Executed Test Cases**.
+**Matrix Structure**: 8 Three-Way Combinations ($2 \text{ Consumers} \times 2 \text{ Functions} \times 2 \text{ Constant Sources}$) = **100 Executed Test Cases**.
 
-## 3-Way Comparison Matrix (CJS vs ESM Consumers)
+## 3-Way Comparison Matrix (Side-by-Side: CJS vs ESM Consumers)
 
-| Suite / Function Case | Func Ext | CJS Consumer Inlined? | CJS Instruction (Size) | ESM Consumer Inlined? | ESM Instruction (Size) |
-| :--- | :---: | :---: | :--- | :---: | :--- |
-| `Local Lexical Scope` / `01-literal.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Local Lexical Scope` / `02-func-const.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Local Lexical Scope` / `03-func-var.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Local Lexical Scope` / `04-func-let.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Local Lexical Scope` / `05-top-const.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Local Lexical Scope` / `06-top-var.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Local Lexical Scope` / `07-top-let.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Internal CJS Constant -> Default Scalar` / `01-const.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Internal CJS Constant -> Default Scalar` / `02-var.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Internal CJS Constant -> Default Scalar` / `03-let.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Internal CJS Constant -> Named Object` / `01-destruct-const.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Internal CJS Constant -> Named Object` / `02-destruct-var.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Internal CJS Constant -> Named Object` / `03-destruct-let.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Internal CJS Constant -> Named Object` / `04-prop-const.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Internal CJS Constant -> Named Object` / `05-prop-var.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Internal CJS Constant -> Named Object` / `06-prop-let.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Cross ESM Constant (require ESM) -> Default Scalar` / `01-const.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Cross ESM Constant (require ESM) -> Default Scalar` / `02-var.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Cross ESM Constant (require ESM) -> Default Scalar` / `03-let.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Cross ESM Constant (require ESM) -> Named Object` / `01-destruct-const.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Cross ESM Constant (require ESM) -> Named Object` / `02-destruct-var.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Cross ESM Constant (require ESM) -> Named Object` / `03-destruct-let.cjs` | `CJS` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Cross ESM Constant (require ESM) -> Named Object` / `04-prop-const.cjs` | `CJS` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
-| `Cross ESM Constant (require ESM) -> Named Object` / `05-prop-var.cjs` | `CJS` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
-| `Cross ESM Constant (require ESM) -> Named Object` / `06-prop-let.cjs` | `CJS` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
-| `Local Lexical Scope` / `01-literal.mjs` | `ESM` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Local Lexical Scope` / `02-func-const.mjs` | `ESM` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Local Lexical Scope` / `03-func-var.mjs` | `ESM` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Local Lexical Scope` / `04-func-let.mjs` | `ESM` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Local Lexical Scope` / `05-top-const.mjs` | `ESM` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Local Lexical Scope` / `06-top-var.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
-| `Local Lexical Scope` / `07-top-let.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
-| `Internal ESM Constant -> Default Scalar` / `01-import.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
-| `Internal ESM Constant -> Default Scalar` / `02-rebind-const.mjs` | `ESM` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Internal ESM Constant -> Default Scalar` / `03-rebind-var.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
-| `Internal ESM Constant -> Default Scalar` / `04-rebind-let.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
-| `Internal ESM Constant -> Named Binding` / `01-import.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
-| `Internal ESM Constant -> Named Binding` / `02-namespace.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
-| `Internal ESM Constant -> Named Binding` / `03-rebind-const.mjs` | `ESM` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Internal ESM Constant -> Named Binding` / `04-rebind-var.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
-| `Internal ESM Constant -> Named Binding` / `05-rebind-let.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
-| `Cross CJS Constant (import CJS) -> Default Scalar` / `01-import.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
-| `Cross CJS Constant (import CJS) -> Default Scalar` / `02-rebind-const.mjs` | `ESM` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Cross CJS Constant (import CJS) -> Default Scalar` / `03-rebind-var.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
-| `Cross CJS Constant (import CJS) -> Default Scalar` / `04-rebind-let.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
-| `Cross CJS Constant (import CJS) -> Named Binding` / `01-import.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
-| `Cross CJS Constant (import CJS) -> Named Binding` / `02-namespace.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
-| `Cross CJS Constant (import CJS) -> Named Binding` / `03-rebind-const.mjs` | `ESM` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
-| `Cross CJS Constant (import CJS) -> Named Binding` / `04-rebind-var.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
-| `Cross CJS Constant (import CJS) -> Named Binding` / `05-rebind-let.mjs` | `ESM` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
-
----
-
-## Summary Statistics
-
-- **Total Cases Tested**: 100 (50 Function Variants $\times$ 2 Consumers)
-- **CJS Consumers Inlined**: 31 / 50 (62%)
-- **ESM Consumers Inlined**: 31 / 50 (62%)
+| Function Type | Constant Source | Usage Type | Pattern File | CJS Consumer Inlined? | CJS Instruction (Size) | ESM Consumer Inlined? | ESM Instruction (Size) |
+| :---: | :---: | :---: | :--- | :---: | :--- | :---: | :--- |
+| `CJS` | `CJS` | `local` | `01-literal.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `local` | `02-func-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `local` | `03-func-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `local` | `04-func-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `local` | `05-top-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `local` | `06-top-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `local` | `07-top-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `default` | `01-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `default` | `02-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `default` | `03-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `named` | `01-destruct-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `named` | `02-destruct-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `named` | `03-destruct-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `named` | `04-prop-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `named` | `05-prop-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `CJS` | `named` | `06-prop-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `ESM` | `default` | `01-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `ESM` | `default` | `02-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `ESM` | `default` | `03-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `ESM` | `named` | `01-destruct-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `ESM` | `named` | `02-destruct-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `ESM` | `named` | `03-destruct-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `CJS` | `ESM` | `named` | `04-prop-const.cjs` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
+| `CJS` | `ESM` | `named` | `05-prop-var.cjs` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
+| `CJS` | `ESM` | `named` | `06-prop-let.cjs` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
+| `ESM` | `ESM` | `local` | `01-literal.mjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `ESM` | `ESM` | `local` | `02-func-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `ESM` | `ESM` | `local` | `03-func-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `ESM` | `ESM` | `local` | `04-func-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `ESM` | `ESM` | `local` | `05-top-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `ESM` | `ESM` | `local` | `06-top-var.mjs` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
+| `ESM` | `ESM` | `local` | `07-top-let.mjs` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
+| `ESM` | `ESM` | `default` | `01-import.mjs` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
+| `ESM` | `ESM` | `default` | `02-rebind-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `ESM` | `ESM` | `default` | `03-rebind-var.mjs` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
+| `ESM` | `ESM` | `default` | `04-rebind-let.mjs` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
+| `ESM` | `ESM` | `named` | `01-import.mjs` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
+| `ESM` | `ESM` | `named` | `02-namespace.mjs` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
+| `ESM` | `ESM` | `named` | `03-rebind-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `ESM` | `ESM` | `named` | `04-rebind-var.mjs` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
+| `ESM` | `ESM` | `named` | `05-rebind-let.mjs` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
+| `ESM` | `CJS` | `default` | `01-import.mjs` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
+| `ESM` | `CJS` | `default` | `02-rebind-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `ESM` | `CJS` | `default` | `03-rebind-var.mjs` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
+| `ESM` | `CJS` | `default` | `04-rebind-let.mjs` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
+| `ESM` | `CJS` | `named` | `01-import.mjs` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
+| `ESM` | `CJS` | `named` | `02-namespace.mjs` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
+| `ESM` | `CJS` | `named` | `03-rebind-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` (136 B) | ✅ **YES** | `movzxwl rdx,rdx` (136 B) |
+| `ESM` | `CJS` | `named` | `04-rebind-var.mjs` | ❌ **NO** | `andl rdx,rdi` (176 B) | ❌ **NO** | `andl rdx,rdi` (176 B) |
+| `ESM` | `CJS` | `named` | `05-rebind-let.mjs` | ❌ **NO** | `andl rdx,rdi` (256 B) | ❌ **NO** | `andl rdx,rdi` (256 B) |
 
 ---
 
-## Detailed Breakdown: CommonJS Consumers (`.cjs`)
+## Results Grouped by 3-Way Combinations
 
-### CJS Function: Local Lexical Scope
+### CJS Consumer -> CJS Function -> CJS Constant
 
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-literal.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `02-func-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-func-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `04-func-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `05-top-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `06-top-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `07-top-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| Usage Type | Pattern File | Inlined? | Target Instruction | Code Size | Notes |
+| :---: | :--- | :---: | :--- | :---: | :--- |
+| `local` | `01-literal.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `02-func-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `03-func-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `04-func-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `05-top-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `06-top-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `07-top-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `01-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `02-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `03-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `01-destruct-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `02-destruct-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `03-destruct-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `04-prop-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `05-prop-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `06-prop-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
 
-### CJS Function: Internal CJS Constant -> Default Scalar
+**Subtotal**: 16 / 16 Inlined (100%)
 
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `02-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+### CJS Consumer -> CJS Function -> ESM Constant
 
-### CJS Function: Internal CJS Constant -> Named Object
+| Usage Type | Pattern File | Inlined? | Target Instruction | Code Size | Notes |
+| :---: | :--- | :---: | :--- | :---: | :--- |
+| `default` | `01-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `02-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `03-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `01-destruct-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `02-destruct-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `03-destruct-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `04-prop-const.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `named` | `05-prop-var.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `named` | `06-prop-let.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
 
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-destruct-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `02-destruct-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-destruct-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `04-prop-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `05-prop-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `06-prop-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+**Subtotal**: 6 / 9 Inlined (67%)
 
-### CJS Function: Cross ESM Constant (require ESM) -> Default Scalar
+### CJS Consumer -> ESM Function -> ESM Constant
 
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `02-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| Usage Type | Pattern File | Inlined? | Target Instruction | Code Size | Notes |
+| :---: | :--- | :---: | :--- | :---: | :--- |
+| `local` | `01-literal.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `02-func-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `03-func-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `04-func-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `05-top-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `06-top-var.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `local` | `07-top-let.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `default` | `01-import.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `default` | `02-rebind-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `03-rebind-var.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `default` | `04-rebind-let.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `named` | `01-import.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `named` | `02-namespace.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `named` | `03-rebind-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `04-rebind-var.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `named` | `05-rebind-let.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
 
-### CJS Function: Cross ESM Constant (require ESM) -> Named Object
+**Subtotal**: 7 / 16 Inlined (44%)
 
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-destruct-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `02-destruct-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-destruct-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `04-prop-const.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `05-prop-var.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `06-prop-let.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+### CJS Consumer -> ESM Function -> CJS Constant
 
-### ESM Function: Local Lexical Scope
+| Usage Type | Pattern File | Inlined? | Target Instruction | Code Size | Notes |
+| :---: | :--- | :---: | :--- | :---: | :--- |
+| `default` | `01-import.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `default` | `02-rebind-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `03-rebind-var.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `default` | `04-rebind-let.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `named` | `01-import.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `named` | `02-namespace.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `named` | `03-rebind-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `04-rebind-var.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `named` | `05-rebind-let.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
 
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-literal.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `02-func-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-func-var.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `04-func-let.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `05-top-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `06-top-var.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `07-top-let.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+**Subtotal**: 2 / 9 Inlined (22%)
 
-### ESM Function: Internal ESM Constant -> Default Scalar
+### ESM Consumer -> CJS Function -> CJS Constant
 
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-import.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
-| `02-rebind-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-rebind-var.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `04-rebind-let.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| Usage Type | Pattern File | Inlined? | Target Instruction | Code Size | Notes |
+| :---: | :--- | :---: | :--- | :---: | :--- |
+| `local` | `01-literal.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `02-func-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `03-func-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `04-func-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `05-top-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `06-top-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `07-top-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `01-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `02-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `03-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `01-destruct-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `02-destruct-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `03-destruct-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `04-prop-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `05-prop-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `06-prop-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
 
-### ESM Function: Internal ESM Constant -> Named Binding
+**Subtotal**: 16 / 16 Inlined (100%)
 
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-import.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
-| `02-namespace.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `03-rebind-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `04-rebind-var.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `05-rebind-let.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+### ESM Consumer -> CJS Function -> ESM Constant
 
-### ESM Function: Cross CJS Constant (import CJS) -> Default Scalar
+| Usage Type | Pattern File | Inlined? | Target Instruction | Code Size | Notes |
+| :---: | :--- | :---: | :--- | :---: | :--- |
+| `default` | `01-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `02-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `03-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `01-destruct-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `02-destruct-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `03-destruct-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `04-prop-const.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `named` | `05-prop-var.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `named` | `06-prop-let.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
 
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-import.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
-| `02-rebind-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-rebind-var.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `04-rebind-let.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+**Subtotal**: 6 / 9 Inlined (67%)
 
-### ESM Function: Cross CJS Constant (import CJS) -> Named Binding
+### ESM Consumer -> ESM Function -> ESM Constant
 
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-import.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
-| `02-namespace.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `03-rebind-const.cjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `04-rebind-var.cjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `05-rebind-let.cjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| Usage Type | Pattern File | Inlined? | Target Instruction | Code Size | Notes |
+| :---: | :--- | :---: | :--- | :---: | :--- |
+| `local` | `01-literal.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `02-func-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `03-func-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `04-func-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `05-top-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `local` | `06-top-var.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `local` | `07-top-let.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `default` | `01-import.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `default` | `02-rebind-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `03-rebind-var.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `default` | `04-rebind-let.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `named` | `01-import.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `named` | `02-namespace.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `named` | `03-rebind-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `04-rebind-var.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `named` | `05-rebind-let.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+
+**Subtotal**: 7 / 16 Inlined (44%)
+
+### ESM Consumer -> ESM Function -> CJS Constant
+
+| Usage Type | Pattern File | Inlined? | Target Instruction | Code Size | Notes |
+| :---: | :--- | :---: | :--- | :---: | :--- |
+| `default` | `01-import.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `default` | `02-rebind-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `default` | `03-rebind-var.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `default` | `04-rebind-let.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `named` | `01-import.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| `named` | `02-namespace.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `named` | `03-rebind-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
+| `named` | `04-rebind-var.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
+| `named` | `05-rebind-let.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+
+**Subtotal**: 2 / 9 Inlined (22%)
 
 ---
 
-## Detailed Breakdown: ESM Consumers (`.mjs`)
+## Summary Statistics by Combination
 
-### CJS Function: Local Lexical Scope
-
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-literal.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `02-func-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-func-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `04-func-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `05-top-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `06-top-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `07-top-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-
-### CJS Function: Internal CJS Constant -> Default Scalar
-
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `02-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-
-### CJS Function: Internal CJS Constant -> Named Object
-
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-destruct-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `02-destruct-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-destruct-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `04-prop-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `05-prop-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `06-prop-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-
-### CJS Function: Cross ESM Constant (require ESM) -> Default Scalar
-
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `02-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-
-### CJS Function: Cross ESM Constant (require ESM) -> Named Object
-
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-destruct-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `02-destruct-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-destruct-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `04-prop-const.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `05-prop-var.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `06-prop-let.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-
-### ESM Function: Local Lexical Scope
-
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-literal.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `02-func-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-func-var.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `04-func-let.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `05-top-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `06-top-var.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `07-top-let.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
-
-### ESM Function: Internal ESM Constant -> Default Scalar
-
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-import.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
-| `02-rebind-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-rebind-var.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `04-rebind-let.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
-
-### ESM Function: Internal ESM Constant -> Named Binding
-
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-import.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
-| `02-namespace.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `03-rebind-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `04-rebind-var.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `05-rebind-let.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
-
-### ESM Function: Cross CJS Constant (import CJS) -> Default Scalar
-
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-import.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
-| `02-rebind-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `03-rebind-var.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `04-rebind-let.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
-
-### ESM Function: Cross CJS Constant (import CJS) -> Named Binding
-
-| Test File | Inlined? | Target Instruction | Code Size | Notes |
-| :--- | :---: | :--- | :---: | :--- |
-| `01-import.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
-| `02-namespace.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `03-rebind-const.mjs` | ✅ **YES** | `movzxwl rdx,rdx` | 136 B | Inlined (16-bit zero-extend) |
-| `04-rebind-var.mjs` | ❌ **NO** | `andl rdx,rdi` | 176 B | Dynamic context/property load |
-| `05-rebind-let.mjs` | ❌ **NO** | `andl rdx,rdi` | 256 B | Dynamic context/property load |
+| Combination | Inlined / Total | Optimization Rate |
+| :--- | :---: | :---: |
+| `CJS Consumer -> CJS Function -> CJS Constant` | 16 / 16 | **100%** |
+| `CJS Consumer -> CJS Function -> ESM Constant` | 6 / 9 | **67%** |
+| `CJS Consumer -> ESM Function -> ESM Constant` | 7 / 16 | **44%** |
+| `CJS Consumer -> ESM Function -> CJS Constant` | 2 / 9 | **22%** |
+| `ESM Consumer -> CJS Function -> CJS Constant` | 16 / 16 | **100%** |
+| `ESM Consumer -> CJS Function -> ESM Constant` | 6 / 9 | **67%** |
+| `ESM Consumer -> ESM Function -> ESM Constant` | 7 / 16 | **44%** |
+| `ESM Consumer -> ESM Function -> CJS Constant` | 2 / 9 | **22%** |
+| **TOTAL OVERALL** | **62 / 100** | **62%** |
