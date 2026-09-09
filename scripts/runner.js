@@ -8,16 +8,76 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(__dirname, '..');
 
 const SUITES = [
-  { section: 'CJS: Local (Same File)', path: join(repoRoot, 'cjs', 'local') },
-  { section: 'CJS: Internal -> Default Scalar', path: join(repoRoot, 'cjs', 'internal', 'default') },
-  { section: 'CJS: Internal -> Named Object', path: join(repoRoot, 'cjs', 'internal', 'named') },
-  { section: 'CJS: Cross (require ESM) -> Default Scalar', path: join(repoRoot, 'cjs', 'cross', 'default') },
-  { section: 'CJS: Cross (require ESM) -> Named Object', path: join(repoRoot, 'cjs', 'cross', 'named') },
-  { section: 'ESM: Local (Same File)', path: join(repoRoot, 'esm', 'local') },
-  { section: 'ESM: Internal -> Default Scalar', path: join(repoRoot, 'esm', 'internal', 'default') },
-  { section: 'ESM: Internal -> Named Binding', path: join(repoRoot, 'esm', 'internal', 'named') },
-  { section: 'ESM: Cross (import CJS) -> Default Scalar', path: join(repoRoot, 'esm', 'cross', 'default') },
-  { section: 'ESM: Cross (import CJS) -> Named Binding', path: join(repoRoot, 'esm', 'cross', 'named') }
+  {
+    category: 'CJS Functions',
+    section: 'CJS Function: Local Lexical Scope',
+    funcPath: join(repoRoot, 'functions', 'cjs', 'local'),
+    cjsConsumerPath: join(repoRoot, 'consumers', 'cjs', 'cjs-local'),
+    esmConsumerPath: join(repoRoot, 'consumers', 'esm', 'cjs-local')
+  },
+  {
+    category: 'CJS Functions',
+    section: 'CJS Function: Internal CJS Constant -> Default Scalar',
+    funcPath: join(repoRoot, 'functions', 'cjs', 'internal', 'default'),
+    cjsConsumerPath: join(repoRoot, 'consumers', 'cjs', 'cjs-internal-default'),
+    esmConsumerPath: join(repoRoot, 'consumers', 'esm', 'cjs-internal-default')
+  },
+  {
+    category: 'CJS Functions',
+    section: 'CJS Function: Internal CJS Constant -> Named Object',
+    funcPath: join(repoRoot, 'functions', 'cjs', 'internal', 'named'),
+    cjsConsumerPath: join(repoRoot, 'consumers', 'cjs', 'cjs-internal-named'),
+    esmConsumerPath: join(repoRoot, 'consumers', 'esm', 'cjs-internal-named')
+  },
+  {
+    category: 'CJS Functions',
+    section: 'CJS Function: Cross ESM Constant (require ESM) -> Default Scalar',
+    funcPath: join(repoRoot, 'functions', 'cjs', 'cross', 'default'),
+    cjsConsumerPath: join(repoRoot, 'consumers', 'cjs', 'cjs-cross-default'),
+    esmConsumerPath: join(repoRoot, 'consumers', 'esm', 'cjs-cross-default')
+  },
+  {
+    category: 'CJS Functions',
+    section: 'CJS Function: Cross ESM Constant (require ESM) -> Named Object',
+    funcPath: join(repoRoot, 'functions', 'cjs', 'cross', 'named'),
+    cjsConsumerPath: join(repoRoot, 'consumers', 'cjs', 'cjs-cross-named'),
+    esmConsumerPath: join(repoRoot, 'consumers', 'esm', 'cjs-cross-named')
+  },
+  {
+    category: 'ESM Functions',
+    section: 'ESM Function: Local Lexical Scope',
+    funcPath: join(repoRoot, 'functions', 'esm', 'local'),
+    cjsConsumerPath: join(repoRoot, 'consumers', 'cjs', 'esm-local'),
+    esmConsumerPath: join(repoRoot, 'consumers', 'esm', 'esm-local')
+  },
+  {
+    category: 'ESM Functions',
+    section: 'ESM Function: Internal ESM Constant -> Default Scalar',
+    funcPath: join(repoRoot, 'functions', 'esm', 'internal', 'default'),
+    cjsConsumerPath: join(repoRoot, 'consumers', 'cjs', 'esm-internal-default'),
+    esmConsumerPath: join(repoRoot, 'consumers', 'esm', 'esm-internal-default')
+  },
+  {
+    category: 'ESM Functions',
+    section: 'ESM Function: Internal ESM Constant -> Named Binding',
+    funcPath: join(repoRoot, 'functions', 'esm', 'internal', 'named'),
+    cjsConsumerPath: join(repoRoot, 'consumers', 'cjs', 'esm-internal-named'),
+    esmConsumerPath: join(repoRoot, 'consumers', 'esm', 'esm-internal-named')
+  },
+  {
+    category: 'ESM Functions',
+    section: 'ESM Function: Cross CJS Constant (import CJS) -> Default Scalar',
+    funcPath: join(repoRoot, 'functions', 'esm', 'cross', 'default'),
+    cjsConsumerPath: join(repoRoot, 'consumers', 'cjs', 'esm-cross-default'),
+    esmConsumerPath: join(repoRoot, 'consumers', 'esm', 'esm-cross-default')
+  },
+  {
+    category: 'ESM Functions',
+    section: 'ESM Function: Cross CJS Constant (import CJS) -> Named Binding',
+    funcPath: join(repoRoot, 'functions', 'esm', 'cross', 'named'),
+    cjsConsumerPath: join(repoRoot, 'consumers', 'cjs', 'esm-cross-named'),
+    esmConsumerPath: join(repoRoot, 'consumers', 'esm', 'esm-cross-named')
+  }
 ];
 
 /**
@@ -34,7 +94,7 @@ function resolveActiveMask(cliMask) {
   }
 
   try {
-    const defaultCjs = readFileSync(join(repoRoot, 'cjs', 'constants', 'default.cjs'), 'utf-8');
+    const defaultCjs = readFileSync(join(repoRoot, 'constants', 'cjs', 'default.cjs'), 'utf-8');
     const maskMatch = defaultCjs.match(/MASK\s*=\s*([^;]+);/);
     if (maskMatch) {
       return maskMatch[1].trim();
@@ -53,7 +113,6 @@ function resolveActiveMask(cliMask) {
  * @returns {object} Analysis result
  */
 function analyzeTestCase(filePath) {
-  // Use process.execPath for reliable cross-platform execution on Windows, macOS, and Linux
   const result = spawnSync(process.execPath, [
     '--allow-natives-syntax',
     '--print-opt-code',
@@ -89,9 +148,6 @@ function analyzeTestCase(filePath) {
   const targetMatch = codeSection.match(/0x[0-9a-f]+\s+[0-9a-f]+\s+(?:[0-9a-f]+\s+)?(?:REX\.W\s+)?(movz[a-z0-9]+[^\r\n]+|uxt[a-z0-9]*[^\r\n]+|ubf[a-z0-9]*[^\r\n]+|and[a-z0-9]*[^\r\n]+)/i);
   const targetSnippet = targetMatch ? targetMatch[1].trim() : 'N/A';
 
-  // Multi-architecture Inlining Detection:
-  // - x86_64: movzxwl / movzwl (16-bit), movzxbl / movzbl (8-bit), andl/andq <reg>, <imm>
-  // - ARM64 (Apple Silicon / AArch64): uxth (16-bit), uxtb (8-bit), and <reg>, <reg>, #<imm>, ubfx/ubfm
   const is16BitZeroExtend = /movzx?w[lq]?|uxth/i.test(targetSnippet);
   const is8BitZeroExtend = /movzx?b[lq]?|uxtb/i.test(targetSnippet);
   const isImmediateAnd = /and[a-z0-9]*\s+[^,]+,\s*(?:#|0x[0-9a-f]+|-?\d+)/i.test(targetSnippet) || /ubf[a-z0-9]*/i.test(targetSnippet);
@@ -124,45 +180,93 @@ function main() {
   const activeMask = resolveActiveMask(cliMask);
   const platformArch = `${process.platform}-${process.arch}`;
 
-  console.log('='.repeat(80));
-  console.log(` V8 TURBOFAN CONSTANT INLINING ANALYSIS (MASK = ${activeMask})`);
+  console.log('='.repeat(90));
+  console.log(` V8 TURBOFAN 3-WAY CONSTANT INLINING ANALYSIS (MASK = ${activeMask})`);
+  console.log(` Constants x Functions (50 Cases) x Consumers (CJS & ESM = 100 Total Runs)`);
   console.log(` Platform: ${platformArch} | Node: ${process.version} | V8: ${process.versions.v8}`);
-  console.log('='.repeat(80));
+  console.log('='.repeat(90));
   console.log();
 
-  let md = `# TurboFan Constant Inlining Matrix (MASK = ${activeMask})\n\n`;
+  let md = `# TurboFan 3-Way Constant Inlining Matrix (MASK = ${activeMask})\n\n`;
   md += `Tested on Node.js \`${process.version}\` (V8 \`${process.versions.v8}\`, Platform: \`${platformArch}\`)\n\n`;
+  md += `**Matrix Structure**: 50 Function Implementations $\\times$ 2 Consumer Module Types (CommonJS \`.cjs\` vs ESM \`.mjs\`) = **100 Executed Test Cases**.\n\n`;
+
+  md += `## 3-Way Comparison Matrix (CJS vs ESM Consumers)\n\n`;
+  md += `| Suite / Function Case | Func Ext | CJS Consumer Inlined? | CJS Instruction (Size) | ESM Consumer Inlined? | ESM Instruction (Size) |\n`;
+  md += `| :--- | :---: | :---: | :--- | :---: | :--- |\n`;
+
+  const detailedCjsMd = [];
+  const detailedEsmMd = [];
+
+  let totalRuns = 0;
+  let cjsInlinedCount = 0;
+  let esmInlinedCount = 0;
 
   for (const suite of SUITES) {
-    if (!existsSync(suite.path)) continue;
+    if (!existsSync(suite.funcPath)) continue;
 
-    const files = readdirSync(suite.path)
-      .filter(f => f.endsWith('.cjs') || f.endsWith('.mjs'))
-      .sort();
+    const funcFiles = readdirSync(suite.funcPath).sort();
 
-    console.log(`\n--- ${suite.section} ---`);
-    md += `### ${suite.section}\n\n`;
-    md += `| Test File | Inlined? | Target Instruction | Code Size | Notes |\n`;
-    md += `| :--- | :---: | :--- | :---: | :--- |\n`;
+    console.log(`\n\x1b[1m--- ${suite.section} (${funcFiles.length} cases) ---\x1b[0m`);
 
-    for (const file of files) {
-      const fullPath = join(suite.path, file);
-      const res = analyzeTestCase(fullPath);
+    let sectionCjsMd = `### ${suite.section}\n\n`;
+    sectionCjsMd += `| Test File | Inlined? | Target Instruction | Code Size | Notes |\n`;
+    sectionCjsMd += `| :--- | :---: | :--- | :---: | :--- |\n`;
 
-      const inlinedBadge = res.immediateInlined ? '✅ **YES**' : '❌ **NO**';
-      const size = res.codeSize ? `${res.codeSize} B` : 'N/A';
-      const instruction = res.targetSnippet ? `\`${res.targetSnippet}\`` : 'N/A';
-      const note = res.note || 'N/A';
+    let sectionEsmMd = `### ${suite.section}\n\n`;
+    sectionEsmMd += `| Test File | Inlined? | Target Instruction | Code Size | Notes |\n`;
+    sectionEsmMd += `| :--- | :---: | :--- | :---: | :--- |\n`;
 
-      const statusStr = res.immediateInlined ? 'YES (Inlined)' : 'NO (Dynamic Load)';
-      const sizeStr = res.codeSize ? `${res.codeSize} B` : 'N/A';
-      console.log(`  ${file.padEnd(24)} | ${statusStr.padEnd(18)} | Size: ${sizeStr.padStart(5)} | ${res.targetSnippet}`);
+    for (const funcFile of funcFiles) {
+      const baseName = funcFile.replace(/\.(mjs|cjs)$/, '');
+      const cjsConsumerFile = `${baseName}.cjs`;
+      const esmConsumerFile = `${baseName}.mjs`;
 
-      md += `| \`${file}\` | ${inlinedBadge} | ${instruction} | ${size} | ${note} |\n`;
+      const cjsConsumerFullPath = join(suite.cjsConsumerPath, cjsConsumerFile);
+      const esmConsumerFullPath = join(suite.esmConsumerPath, esmConsumerFile);
+
+      const cjsRes = analyzeTestCase(cjsConsumerFullPath);
+      const esmRes = analyzeTestCase(esmConsumerFullPath);
+
+      totalRuns += 2;
+      if (cjsRes.immediateInlined) cjsInlinedCount++;
+      if (esmRes.immediateInlined) esmInlinedCount++;
+
+      // Badges
+      const cjsBadge = cjsRes.immediateInlined ? '✅ **YES**' : '❌ **NO**';
+      const esmBadge = esmRes.immediateInlined ? '✅ **YES**' : '❌ **NO**';
+
+      const cjsInst = cjsRes.targetSnippet ? `\`${cjsRes.targetSnippet}\` (${cjsRes.codeSize || 'N/A'} B)` : 'N/A';
+      const esmInst = esmRes.targetSnippet ? `\`${esmRes.targetSnippet}\` (${esmRes.codeSize || 'N/A'} B)` : 'N/A';
+
+      const funcExt = funcFile.endsWith('.cjs') ? 'CJS' : 'ESM';
+
+      md += `| \`${suite.section.split(':')[1]?.trim() || suite.section}\` / \`${funcFile}\` | \`${funcExt}\` | ${cjsBadge} | ${cjsInst} | ${esmBadge} | ${esmInst} |\n`;
+
+      // Console logging
+      const cjsStatus = cjsRes.immediateInlined ? '\x1b[32mYES\x1b[0m' : '\x1b[31mNO \x1b[0m';
+      const esmStatus = esmRes.immediateInlined ? '\x1b[32mYES\x1b[0m' : '\x1b[31mNO \x1b[0m';
+      console.log(`  ${funcFile.padEnd(24)} | CJS Consumer: ${cjsStatus} (${(cjsRes.codeSize + 'B').padStart(5)}) | ESM Consumer: ${esmStatus} (${(esmRes.codeSize + 'B').padStart(5)})`);
+
+      // Section tables
+      sectionCjsMd += `| \`${cjsConsumerFile}\` | ${cjsBadge} | \`${cjsRes.targetSnippet}\` | ${cjsRes.codeSize ? cjsRes.codeSize + ' B' : 'N/A'} | ${cjsRes.note || 'N/A'} |\n`;
+      sectionEsmMd += `| \`${esmConsumerFile}\` | ${esmBadge} | \`${esmRes.targetSnippet}\` | ${esmRes.codeSize ? esmRes.codeSize + ' B' : 'N/A'} | ${esmRes.note || 'N/A'} |\n`;
     }
 
-    md += `\n`;
+    detailedCjsMd.push(sectionCjsMd);
+    detailedEsmMd.push(sectionEsmMd);
   }
+
+  md += `\n---\n\n## Summary Statistics\n\n`;
+  md += `- **Total Cases Tested**: ${totalRuns} (${totalRuns / 2} Function Variants $\\times$ 2 Consumers)\n`;
+  md += `- **CJS Consumers Inlined**: ${cjsInlinedCount} / ${totalRuns / 2} (${Math.round((cjsInlinedCount / (totalRuns / 2)) * 100)}%)\n`;
+  md += `- **ESM Consumers Inlined**: ${esmInlinedCount} / ${totalRuns / 2} (${Math.round((esmInlinedCount / (totalRuns / 2)) * 100)}%)\n\n`;
+
+  md += `---\n\n## Detailed Breakdown: CommonJS Consumers (\`.cjs\`)\n\n`;
+  md += detailedCjsMd.join('\n');
+
+  md += `\n---\n\n## Detailed Breakdown: ESM Consumers (\`.mjs\`)\n\n`;
+  md += detailedEsmMd.join('\n');
 
   // Save report to results/<mask_hex>.md
   const resultsDir = join(repoRoot, 'results');
@@ -176,10 +280,11 @@ function main() {
 
   writeFileSync(resultFilePath, md, 'utf-8');
 
-  console.log('\n' + '='.repeat(80));
-  console.log(` 📁 Matrix saved to: results/${resultFileName}`);
-  console.log(` 📍 Full path:       ${resultFilePath}`);
-  console.log('='.repeat(80));
+  console.log('\n' + '='.repeat(90));
+  console.log(` 📁 3-Way Matrix saved to: results/${resultFileName}`);
+  console.log(` 📍 Full path:            ${resultFilePath}`);
+  console.log('='.repeat(90));
 }
 
 main();
+

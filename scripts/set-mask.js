@@ -18,32 +18,32 @@ export function setMask(newMask) {
 
   // 1. Module export definition files
   const constantFiles = [
-    join(repoRoot, 'cjs', 'constants', 'default.cjs'),
-    join(repoRoot, 'cjs', 'constants', 'named.cjs'),
-    join(repoRoot, 'esm', 'constants', 'default.mjs'),
-    join(repoRoot, 'esm', 'constants', 'named.mjs'),
+    join(repoRoot, 'constants', 'cjs', 'default.cjs'),
+    join(repoRoot, 'constants', 'cjs', 'named.cjs'),
+    join(repoRoot, 'constants', 'esm', 'default.mjs'),
+    join(repoRoot, 'constants', 'esm', 'named.mjs'),
   ];
 
-  // 2. Literal test cases where the mask is encoded directly in the return statement
+  // 2. Literal function definition files where the mask is encoded directly in the return statement
   const literalFiles = [
-    join(repoRoot, 'cjs', 'local', '01-literal.cjs'),
-    join(repoRoot, 'esm', 'local', '01-literal.mjs'),
+    join(repoRoot, 'functions', 'cjs', 'local', '01-literal.cjs'),
+    join(repoRoot, 'functions', 'esm', 'local', '01-literal.mjs'),
   ];
 
-  // 3. Local test cases with lexical declarations (function / top const/var/let)
+  // 3. Local function definition files with lexical declarations (function / top const/var/let)
   const localDeclFiles = [
-    join(repoRoot, 'cjs', 'local', '02-func-const.cjs'),
-    join(repoRoot, 'cjs', 'local', '03-func-var.cjs'),
-    join(repoRoot, 'cjs', 'local', '04-func-let.cjs'),
-    join(repoRoot, 'cjs', 'local', '05-top-const.cjs'),
-    join(repoRoot, 'cjs', 'local', '06-top-var.cjs'),
-    join(repoRoot, 'cjs', 'local', '07-top-let.cjs'),
-    join(repoRoot, 'esm', 'local', '02-func-const.mjs'),
-    join(repoRoot, 'esm', 'local', '03-func-var.mjs'),
-    join(repoRoot, 'esm', 'local', '04-func-let.mjs'),
-    join(repoRoot, 'esm', 'local', '05-top-const.mjs'),
-    join(repoRoot, 'esm', 'local', '06-top-var.mjs'),
-    join(repoRoot, 'esm', 'local', '07-top-let.mjs'),
+    join(repoRoot, 'functions', 'cjs', 'local', '02-func-const.cjs'),
+    join(repoRoot, 'functions', 'cjs', 'local', '03-func-var.cjs'),
+    join(repoRoot, 'functions', 'cjs', 'local', '04-func-let.cjs'),
+    join(repoRoot, 'functions', 'cjs', 'local', '05-top-const.cjs'),
+    join(repoRoot, 'functions', 'cjs', 'local', '06-top-var.cjs'),
+    join(repoRoot, 'functions', 'cjs', 'local', '07-top-let.cjs'),
+    join(repoRoot, 'functions', 'esm', 'local', '02-func-const.mjs'),
+    join(repoRoot, 'functions', 'esm', 'local', '03-func-var.mjs'),
+    join(repoRoot, 'functions', 'esm', 'local', '04-func-let.mjs'),
+    join(repoRoot, 'functions', 'esm', 'local', '05-top-const.mjs'),
+    join(repoRoot, 'functions', 'esm', 'local', '06-top-var.mjs'),
+    join(repoRoot, 'functions', 'esm', 'local', '07-top-let.mjs'),
   ];
 
   let updatedCount = 0;
