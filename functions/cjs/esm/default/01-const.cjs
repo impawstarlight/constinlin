@@ -1,4 +1,4 @@
-const MASK = require('../../../../constants/esm/default.mjs').default;
+const MASK = require('#constants/esm/default.mjs').default;
 function mask(x) {
   return x & MASK;
 }

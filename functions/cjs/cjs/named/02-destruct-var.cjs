@@ -1,4 +1,4 @@
-var { MASK } = require('../../../../constants/cjs/named.cjs');
+var { MASK } = require('#constants/cjs/named.cjs');
 function mask(x) {
   return x & MASK;
 }

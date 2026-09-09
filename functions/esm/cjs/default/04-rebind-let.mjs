@@ -1,4 +1,4 @@
-import _MASK from '../../../../constants/cjs/default.cjs';
+import _MASK from '#constants/cjs/default.cjs';
 let MASK = _MASK;
 export function mask(x) {
   return x & MASK;

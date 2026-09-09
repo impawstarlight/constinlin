@@ -1,4 +1,4 @@
-import { mask } from '../../../../../functions/cjs/esm/named/02-destruct-var.cjs';
+import { mask } from '#functions/cjs/esm/named/02-destruct-var.cjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

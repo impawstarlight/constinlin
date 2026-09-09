@@ -1,4 +1,4 @@
-import MASK from '../../../../constants/cjs/default.cjs';
+import MASK from '#constants/cjs/default.cjs';
 export function mask(x) {
   return x & MASK;
 }

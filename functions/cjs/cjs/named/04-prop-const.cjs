@@ -1,4 +1,4 @@
-const mod = require('../../../../constants/cjs/named.cjs');
+const mod = require('#constants/cjs/named.cjs');
 function mask(x) {
   return x & mod.MASK;
 }

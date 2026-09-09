@@ -1,4 +1,4 @@
-const { MASK } = require('../../../../constants/esm/named.mjs');
+const { MASK } = require('#constants/esm/named.mjs');
 function mask(x) {
   return x & MASK;
 }

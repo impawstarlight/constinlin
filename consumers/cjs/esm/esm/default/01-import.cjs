@@ -1,4 +1,4 @@
-const { mask } = require('../../../../../functions/esm/esm/default/01-import.mjs');
+const { mask } = require('#functions/esm/esm/default/01-import.mjs');
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

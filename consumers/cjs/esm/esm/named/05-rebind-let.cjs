@@ -1,4 +1,4 @@
-const { mask } = require('../../../../../functions/esm/esm/named/05-rebind-let.mjs');
+const { mask } = require('#functions/esm/esm/named/05-rebind-let.mjs');
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

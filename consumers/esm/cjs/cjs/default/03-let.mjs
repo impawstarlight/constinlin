@@ -1,4 +1,4 @@
-import { mask } from '../../../../../functions/cjs/cjs/default/03-let.cjs';
+import { mask } from '#functions/cjs/cjs/default/03-let.cjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

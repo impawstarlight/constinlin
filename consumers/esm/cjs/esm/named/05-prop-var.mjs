@@ -1,4 +1,4 @@
-import { mask } from '../../../../../functions/cjs/esm/named/05-prop-var.cjs';
+import { mask } from '#functions/cjs/esm/named/05-prop-var.cjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

@@ -1,4 +1,4 @@
-import { mask } from '../../../../../functions/esm/esm/named/03-rebind-const.mjs';
+import { mask } from '#functions/esm/esm/named/03-rebind-const.mjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

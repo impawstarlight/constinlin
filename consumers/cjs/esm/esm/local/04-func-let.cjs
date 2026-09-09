@@ -1,4 +1,4 @@
-const { mask } = require('../../../../../functions/esm/esm/local/04-func-let.mjs');
+const { mask } = require('#functions/esm/esm/local/04-func-let.mjs');
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

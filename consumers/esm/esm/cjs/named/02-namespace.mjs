@@ -1,4 +1,4 @@
-import { mask } from '../../../../../functions/esm/cjs/named/02-namespace.mjs';
+import { mask } from '#functions/esm/cjs/named/02-namespace.mjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

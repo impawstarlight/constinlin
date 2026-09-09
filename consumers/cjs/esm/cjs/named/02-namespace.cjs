@@ -1,4 +1,4 @@
-const { mask } = require('../../../../../functions/esm/cjs/named/02-namespace.mjs');
+const { mask } = require('#functions/esm/cjs/named/02-namespace.mjs');
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

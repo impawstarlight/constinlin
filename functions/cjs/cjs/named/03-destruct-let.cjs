@@ -1,4 +1,4 @@
-let { MASK } = require('../../../../constants/cjs/named.cjs');
+let { MASK } = require('#constants/cjs/named.cjs');
 function mask(x) {
   return x & MASK;
 }

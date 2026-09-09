@@ -1,4 +1,4 @@
-import * as mod from '../../../../constants/esm/named.mjs';
+import * as mod from '#constants/esm/named.mjs';
 export function mask(x) {
   return x & mod.MASK;
 }

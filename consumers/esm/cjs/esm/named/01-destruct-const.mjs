@@ -1,4 +1,4 @@
-import { mask } from '../../../../../functions/cjs/esm/named/01-destruct-const.cjs';
+import { mask } from '#functions/cjs/esm/named/01-destruct-const.cjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

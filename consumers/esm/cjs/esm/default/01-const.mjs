@@ -1,4 +1,4 @@
-import { mask } from '../../../../../functions/cjs/esm/default/01-const.cjs';
+import { mask } from '#functions/cjs/esm/default/01-const.cjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

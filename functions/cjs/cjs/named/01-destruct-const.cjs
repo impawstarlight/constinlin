@@ -1,4 +1,4 @@
-const { MASK } = require('../../../../constants/cjs/named.cjs');
+const { MASK } = require('#constants/cjs/named.cjs');
 function mask(x) {
   return x & MASK;
 }
