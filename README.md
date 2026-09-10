@@ -1,7 +1,7 @@
 # V8 TurboFan Constant Inlining 3-Way Matrix
 
 This repository provides an automated test harness to analyze and verify how Google V8's **TurboFan** JIT compiler optimizes constants (such as 16-bit word mask `0xFFFF`, 8-bit `0xFF`, or 32-bit `0xDEADBEEF`) across a full 3-way crisscross matrix:
-$$\textbf{Constants Module} \times \textbf{Function Definition \& Export} \times \textbf{Consumer Execution (CJS vs ESM)}$$
+$$\textbf{Constants Module} \times \textbf{Function Definition and Export} \times \textbf{Consumer Execution (CJS vs ESM)}$$
 
 ---
 
