@@ -174,8 +174,7 @@ function main() {
   // VIEW 1: Consumer Layer Sensitivity (Varying Consumer: CJS vs ESM)
   // =========================================================================
   md += `## View 1: Consumer Layer Sensitivity (Varying Consumer: CJS vs ESM)\n\n`;
-  md += `> **Key Takeaway**: The consumer layer has **0% impact** on TurboFan's inlining decision. In 100% of cases, changing only the consumer between \`require()\` and \`import\` produces identical assembly instructions and byte sizes for \`mask\`.\n\n`;
-  md += `| Function Type | Constant Source | Usage Type | Function Module | CJS Consumer Inlined? | CJS Instruction (Size) | ESM Consumer Inlined? | ESM Instruction (Size) | Consumer Delta |\n`;
+  md += `| Function Source | Constant Source | Constant Export Type | Function Module | CJS Consumer Inlined? | CJS Instruction (Size) | ESM Consumer Inlined? | ESM Instruction (Size) | Consumer Delta |\n`;
   md += `| :---: | :---: | :---: | :--- | :---: | :--- | :---: | :--- | :---: |\n`;
 
   for (const suite of SUITES) {
@@ -210,9 +209,8 @@ function main() {
   // VIEW 2: Constant Layer Sensitivity (Varying Constant Source: CJS vs ESM)
   // =========================================================================
   md += `## View 2: Constant Layer Sensitivity (Varying Constant Source: CJS vs ESM)\n\n`;
-  md += `> **Key Takeaway**: In 15 out of 18 comparable pairs (83%), the constant module format (CJS vs ESM) produces identical inlining results. The **sole divergence** occurs in **CJS Function Property Access** (\`mod.MASK\`): requiring a CJS constant object inlines via V8 Hidden Class tracking (136 B), whereas requiring an ESM namespace object drops into a dynamic runtime lookup (176 B).\n\n`;
-  md += `| Function Type | Usage Type | Syntax Pattern | CJS Constant Inlined? | CJS Constant Instruction | ESM Constant Inlined? | ESM Constant Instruction | Constant Sensitivity Note |\n`;
-  md += `| :---: | :---: | :--- | :---: | :--- | :---: | :--- | :--- |\n`;
+  md += `| Function Source | Constant Export Type | Function Pattern | CJS Constant Inlined? | CJS Constant Instruction (Size) | ESM Constant Inlined? | ESM Constant Instruction (Size) | Constant Delta |\n`;
+  md += `| :---: | :---: | :--- | :---: | :--- | :---: | :--- | :---: |\n`;
 
   // 1. CJS Function Constant Comparison
   const cjsFuncDefaultFiles = ['01-const.cjs', '02-var.cjs', '03-let.cjs'];
@@ -225,8 +223,10 @@ function main() {
     const eBadge = esmConstRes.immediateInlined ? `[✅ **YES**](${esmRel})` : `[❌ **NO**](${esmRel})`;
     const cInst = cjsConstRes.targetSnippet ? `\`${cjsConstRes.targetSnippet}\` (${cjsConstRes.codeSize} B)` : 'N/A';
     const eInst = esmConstRes.targetSnippet ? `\`${esmConstRes.targetSnippet}\` (${esmConstRes.codeSize} B)` : 'N/A';
-    const note = (cjsConstRes.immediateInlined === esmConstRes.immediateInlined) ? 'No impact (both inline)' : 'Impacted by constant format';
-    md += `| \`CJS\` | \`default\` | \`${f}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | ${note} |\n`;
+    const delta = (cjsConstRes.immediateInlined === esmConstRes.immediateInlined && cjsConstRes.codeSize === esmConstRes.codeSize)
+      ? 'Identical'
+      : '⚠️ Different';
+    md += `| \`CJS\` | \`default\` | \`${f}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | \`${delta}\` |\n`;
   }
 
   const cjsFuncNamedFiles = ['01-destruct-const.cjs', '02-destruct-var.cjs', '03-destruct-let.cjs', '04-prop-const.cjs', '05-prop-var.cjs', '06-prop-let.cjs'];
@@ -239,9 +239,10 @@ function main() {
     const eBadge = esmConstRes.immediateInlined ? `[✅ **YES**](${esmRel})` : `[❌ **NO**](${esmRel})`;
     const cInst = cjsConstRes.targetSnippet ? `\`${cjsConstRes.targetSnippet}\` (${cjsConstRes.codeSize} B)` : 'N/A';
     const eInst = esmConstRes.targetSnippet ? `\`${esmConstRes.targetSnippet}\` (${esmConstRes.codeSize} B)` : 'N/A';
-    const isProp = f.includes('prop');
-    const note = isProp ? '⚠️ **ESM namespace object blocks property inlining**' : 'No impact (destructuring inlines for both)';
-    md += `| \`CJS\` | \`named\` | \`${f}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | ${note} |\n`;
+    const delta = (cjsConstRes.immediateInlined === esmConstRes.immediateInlined && cjsConstRes.codeSize === esmConstRes.codeSize)
+      ? 'Identical'
+      : '⚠️ Different';
+    md += `| \`CJS\` | \`named\` | \`${f}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | \`${delta}\` |\n`;
   }
 
   // 2. ESM Function Constant Comparison
@@ -256,9 +257,10 @@ function main() {
     const eBadge = esmConstRes.immediateInlined ? `[✅ **YES**](${esmRel})` : `[❌ **NO**](${esmRel})`;
     const cInst = cjsConstRes.targetSnippet ? `\`${cjsConstRes.targetSnippet}\` (${cjsConstRes.codeSize} B)` : 'N/A';
     const eInst = esmConstRes.targetSnippet ? `\`${esmConstRes.targetSnippet}\` (${esmConstRes.codeSize} B)` : 'N/A';
-    const isRebind = f.includes('rebind-const');
-    const note = isRebind ? 'No impact (both inline with rebind)' : 'No impact (both fail without const rebind)';
-    md += `| \`ESM\` | \`default\` | \`${esmFilename}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | ${note} |\n`;
+    const delta = (cjsConstRes.immediateInlined === esmConstRes.immediateInlined && cjsConstRes.codeSize === esmConstRes.codeSize)
+      ? 'Identical'
+      : '⚠️ Different';
+    md += `| \`ESM\` | \`default\` | \`${esmFilename}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | \`${delta}\` |\n`;
   }
 
   const esmFuncNamedFiles = ['01-import.cjs', '02-namespace.cjs', '03-rebind-const.cjs', '04-rebind-var.cjs', '05-rebind-let.cjs'];
@@ -272,230 +274,20 @@ function main() {
     const eBadge = esmConstRes.immediateInlined ? `[✅ **YES**](${esmRel})` : `[❌ **NO**](${esmRel})`;
     const cInst = cjsConstRes.targetSnippet ? `\`${cjsConstRes.targetSnippet}\` (${cjsConstRes.codeSize} B)` : 'N/A';
     const eInst = esmConstRes.targetSnippet ? `\`${esmConstRes.targetSnippet}\` (${esmConstRes.codeSize} B)` : 'N/A';
-    const isRebind = f.includes('rebind-const');
-    const note = isRebind ? 'No impact (both inline with rebind)' : 'No impact (both fail without const rebind)';
-    md += `| \`ESM\` | \`named\` | \`${esmFilename}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | ${note} |\n`;
+    const delta = (cjsConstRes.immediateInlined === esmConstRes.immediateInlined && cjsConstRes.codeSize === esmConstRes.codeSize)
+      ? 'Identical'
+      : '⚠️ Different';
+    md += `| \`ESM\` | \`named\` | \`${esmFilename}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | \`${delta}\` |\n`;
   }
 
   md += `\n---\n\n`;
 
   // =========================================================================
-  // VIEW 3: Function Layer Sensitivity (Varying Function Module: CJS vs ESM)
+  // Summary Statistics Table
   // =========================================================================
-  md += `## View 3: Function Layer Sensitivity (Varying Function Module: CJS vs ESM)\n\n`;
-  md += `> **Key Takeaway**: The function definition module format is the **primary driver** of optimization outcomes. CJS functions achieve **88% inlining** because Node's module wrapper treats top-level \`const\`/\`var\`/\`let\` and destructured imports as function-local lexical variables. Conversely, ESM functions achieve only **36% inlining** because top-level imports are live bindings to a mutable \`Module Environment Record\` that require explicit lexical re-binding (\`const MASK = _MASK\`).\n\n`;
-  md += `> **Note on Syntactic Equivalence**: CommonJS and ESM function definitions do not have a strict 1-to-1 syntactic bijection because CommonJS uses \`require()\` and object destructuring/properties (25 total cases), while ESM uses \`import\` statements, namespace imports, and lexical re-binding patterns (25 total cases). The comparison table below pairs functionally corresponding intents.\n\n`;
-  md += `| Constant Source | Syntax Pattern Category | CJS Function File | CJS Function Inlined? | ESM Function File | ESM Function Inlined? | Function Module Difference |\n`;
-  md += `| :---: | :--- | :--- | :---: | :--- | :---: | :--- |\n`;
-
-  const funcComparisonPairs = [
-    {
-      constSrc: 'Local',
-      cat: 'Literal constant',
-      cjsFile: '01-literal.cjs',
-      cjsRel: '../functions/cjs/cjs/local/01-literal.cjs',
-      cjsRes: resultsMap.cjs.cjs.cjs.local['01-literal.cjs'],
-      esmFile: '01-literal.mjs',
-      esmRel: '../functions/esm/esm/local/01-literal.mjs',
-      esmRes: resultsMap.cjs.esm.esm.local['01-literal.cjs'],
-      note: 'Identical (literal inlines in both)'
-    },
-    {
-      constSrc: 'Local',
-      cat: 'Function-scoped const',
-      cjsFile: '02-func-const.cjs',
-      cjsRel: '../functions/cjs/cjs/local/02-func-const.cjs',
-      cjsRes: resultsMap.cjs.cjs.cjs.local['02-func-const.cjs'],
-      esmFile: '02-func-const.mjs',
-      esmRel: '../functions/esm/esm/local/02-func-const.mjs',
-      esmRes: resultsMap.cjs.esm.esm.local['02-func-const.cjs'],
-      note: 'Identical (function-scoped const inlines)'
-    },
-    {
-      constSrc: 'Local',
-      cat: 'Function-scoped var',
-      cjsFile: '03-func-var.cjs',
-      cjsRel: '../functions/cjs/cjs/local/03-func-var.cjs',
-      cjsRes: resultsMap.cjs.cjs.cjs.local['03-func-var.cjs'],
-      esmFile: '03-func-var.mjs',
-      esmRel: '../functions/esm/esm/local/03-func-var.mjs',
-      esmRes: resultsMap.cjs.esm.esm.local['03-func-var.cjs'],
-      note: 'Identical (function-scoped var inlines)'
-    },
-    {
-      constSrc: 'Local',
-      cat: 'Function-scoped let',
-      cjsFile: '04-func-let.cjs',
-      cjsRel: '../functions/cjs/cjs/local/04-func-let.cjs',
-      cjsRes: resultsMap.cjs.cjs.cjs.local['04-func-let.cjs'],
-      esmFile: '04-func-let.mjs',
-      esmRel: '../functions/esm/esm/local/04-func-let.mjs',
-      esmRes: resultsMap.cjs.esm.esm.local['04-func-let.cjs'],
-      note: 'Identical (function-scoped let inlines)'
-    },
-    {
-      constSrc: 'Local',
-      cat: 'Top-level const',
-      cjsFile: '05-top-const.cjs',
-      cjsRel: '../functions/cjs/cjs/local/05-top-const.cjs',
-      cjsRes: resultsMap.cjs.cjs.cjs.local['05-top-const.cjs'],
-      esmFile: '05-top-const.mjs',
-      esmRel: '../functions/esm/esm/local/05-top-const.mjs',
-      esmRes: resultsMap.cjs.esm.esm.local['05-top-const.cjs'],
-      note: 'Identical (top-level const inlines in both)'
-    },
-    {
-      constSrc: 'Local',
-      cat: 'Top-level var',
-      cjsFile: '06-top-var.cjs',
-      cjsRel: '../functions/cjs/cjs/local/06-top-var.cjs',
-      cjsRes: resultsMap.cjs.cjs.cjs.local['06-top-var.cjs'],
-      esmFile: '06-top-var.mjs',
-      esmRel: '../functions/esm/esm/local/06-top-var.mjs',
-      esmRes: resultsMap.cjs.esm.esm.local['06-top-var.cjs'],
-      note: '⚠️ CJS inlines (wrapper closure); ESM fails (module context slot)'
-    },
-    {
-      constSrc: 'Local',
-      cat: 'Top-level let',
-      cjsFile: '07-top-let.cjs',
-      cjsRel: '../functions/cjs/cjs/local/07-top-let.cjs',
-      cjsRes: resultsMap.cjs.cjs.cjs.local['07-top-let.cjs'],
-      esmFile: '07-top-let.mjs',
-      esmRel: '../functions/esm/esm/local/07-top-let.mjs',
-      esmRes: resultsMap.cjs.esm.esm.local['07-top-let.cjs'],
-      note: '⚠️ CJS inlines (wrapper closure); ESM fails (module context slot)'
-    },
-
-    // Default imports/requires
-    {
-      constSrc: 'CJS Constant',
-      cat: 'Default direct assignment',
-      cjsFile: '01-const.cjs (`const MASK = req(...)`)',
-      cjsRel: '../functions/cjs/cjs/default/01-const.cjs',
-      cjsRes: resultsMap.cjs.cjs.cjs.default['01-const.cjs'],
-      esmFile: '01-import.mjs (`import MASK from ...`)',
-      esmRel: '../functions/esm/cjs/default/01-import.mjs',
-      esmRes: resultsMap.cjs.esm.cjs.default['01-import.cjs'],
-      note: '⚠️ CJS inlines; ESM fails (ESM live binding)'
-    },
-    {
-      constSrc: 'CJS Constant',
-      cat: 'Default re-bound const',
-      cjsFile: '01-const.cjs (`const MASK = req(...)`)',
-      cjsRel: '../functions/cjs/cjs/default/01-const.cjs',
-      cjsRes: resultsMap.cjs.cjs.cjs.default['01-const.cjs'],
-      esmFile: '02-rebind-const.mjs (`const MASK = _M`)',
-      esmRel: '../functions/esm/cjs/default/02-rebind-const.mjs',
-      esmRes: resultsMap.cjs.esm.cjs.default['02-rebind-const.cjs'],
-      note: 'Both inline (re-binding restores ESM inlining)'
-    },
-    {
-      constSrc: 'ESM Constant',
-      cat: 'Default direct assignment',
-      cjsFile: '01-const.cjs (`const MASK = req(...).default`)',
-      cjsRel: '../functions/cjs/esm/default/01-const.cjs',
-      cjsRes: resultsMap.cjs.cjs.esm.default['01-const.cjs'],
-      esmFile: '01-import.mjs (`import MASK from ...`)',
-      esmRel: '../functions/esm/esm/default/01-import.mjs',
-      esmRes: resultsMap.cjs.esm.esm.default['01-import.cjs'],
-      note: '⚠️ CJS inlines; ESM fails (ESM live binding)'
-    },
-    {
-      constSrc: 'ESM Constant',
-      cat: 'Default re-bound const',
-      cjsFile: '01-const.cjs (`const MASK = req(...).default`)',
-      cjsRel: '../functions/cjs/esm/default/01-const.cjs',
-      cjsRes: resultsMap.cjs.cjs.esm.default['01-const.cjs'],
-      esmFile: '02-rebind-const.mjs (`const MASK = _M`)',
-      esmRel: '../functions/esm/esm/default/02-rebind-const.mjs',
-      esmRes: resultsMap.cjs.esm.esm.default['02-rebind-const.cjs'],
-      note: 'Both inline (re-binding restores ESM inlining)'
-    },
-
-    // Named imports/requires
-    {
-      constSrc: 'CJS Constant',
-      cat: 'Named direct / destructured',
-      cjsFile: '01-destruct-const.cjs (`const { MASK }`)',
-      cjsRel: '../functions/cjs/cjs/named/01-destruct-const.cjs',
-      cjsRes: resultsMap.cjs.cjs.cjs.named['01-destruct-const.cjs'],
-      esmFile: '01-import.mjs (`import { MASK }`)',
-      esmRel: '../functions/esm/cjs/named/01-import.mjs',
-      esmRes: resultsMap.cjs.esm.cjs.named['01-import.cjs'],
-      note: '⚠️ CJS inlines; ESM fails (ESM live binding)'
-    },
-    {
-      constSrc: 'CJS Constant',
-      cat: 'Named property / namespace',
-      cjsFile: '04-prop-const.cjs (`mod.MASK`)',
-      cjsRel: '../functions/cjs/cjs/named/04-prop-const.cjs',
-      cjsRes: resultsMap.cjs.cjs.cjs.named['04-prop-const.cjs'],
-      esmFile: '02-namespace.mjs (`mod.MASK`)',
-      esmRel: '../functions/esm/cjs/named/02-namespace.mjs',
-      esmRes: resultsMap.cjs.esm.cjs.named['02-namespace.cjs'],
-      note: '⚠️ CJS inlines (Hidden Class Map); ESM fails (namespace object)'
-    },
-    {
-      constSrc: 'CJS Constant',
-      cat: 'Named re-bound const',
-      cjsFile: '01-destruct-const.cjs (`const { MASK }`)',
-      cjsRel: '../functions/cjs/cjs/named/01-destruct-const.cjs',
-      cjsRes: resultsMap.cjs.cjs.cjs.named['01-destruct-const.cjs'],
-      esmFile: '03-rebind-const.mjs (`const MASK = _M`)',
-      esmRel: '../functions/esm/cjs/named/03-rebind-const.mjs',
-      esmRes: resultsMap.cjs.esm.cjs.named['03-rebind-const.cjs'],
-      note: 'Both inline (re-binding restores ESM inlining)'
-    },
-    {
-      constSrc: 'ESM Constant',
-      cat: 'Named direct / destructured',
-      cjsFile: '01-destruct-const.cjs (`const { MASK }`)',
-      cjsRel: '../functions/cjs/esm/named/01-destruct-const.cjs',
-      cjsRes: resultsMap.cjs.cjs.esm.named['01-destruct-const.cjs'],
-      esmFile: '01-import.mjs (`import { MASK }`)',
-      esmRel: '../functions/esm/esm/named/01-import.mjs',
-      esmRes: resultsMap.cjs.esm.esm.named['01-import.cjs'],
-      note: '⚠️ CJS inlines; ESM fails (ESM live binding)'
-    },
-    {
-      constSrc: 'ESM Constant',
-      cat: 'Named property / namespace',
-      cjsFile: '04-prop-const.cjs (`mod.MASK`)',
-      cjsRel: '../functions/cjs/esm/named/04-prop-const.cjs',
-      cjsRes: resultsMap.cjs.cjs.esm.named['04-prop-const.cjs'],
-      esmFile: '02-namespace.mjs (`mod.MASK`)',
-      esmRel: '../functions/esm/esm/named/02-namespace.mjs',
-      esmRes: resultsMap.cjs.esm.esm.named['02-namespace.cjs'],
-      note: 'Both fail (dynamic property lookup on namespace object)'
-    },
-    {
-      constSrc: 'ESM Constant',
-      cat: 'Named re-bound const',
-      cjsFile: '01-destruct-const.cjs (`const { MASK }`)',
-      cjsRel: '../functions/cjs/esm/named/01-destruct-const.cjs',
-      cjsRes: resultsMap.cjs.cjs.esm.named['01-destruct-const.cjs'],
-      esmFile: '03-rebind-const.mjs (`const MASK = _M`)',
-      esmRel: '../functions/esm/esm/named/03-rebind-const.mjs',
-      esmRes: resultsMap.cjs.esm.esm.named['03-rebind-const.cjs'],
-      note: 'Both inline (re-binding restores ESM inlining)'
-    }
-  ];
-
-  for (const pair of funcComparisonPairs) {
-    const cBadge = pair.cjsRes?.immediateInlined ? '✅ **YES**' : '❌ **NO**';
-    const eBadge = pair.esmRes?.immediateInlined ? '✅ **YES**' : '❌ **NO**';
-    const cInst = pair.cjsRes?.targetSnippet ? `\`${pair.cjsRes.targetSnippet}\` (${pair.cjsRes.codeSize} B)` : 'N/A';
-    const eInst = pair.esmRes?.targetSnippet ? `\`${pair.esmRes.targetSnippet}\` (${pair.esmRes.codeSize} B)` : 'N/A';
-    md += `| \`${pair.constSrc}\` | ${pair.cat} | [\`${pair.cjsFile}\`](${pair.cjsRel}) | ${cBadge} (${cInst}) | [\`${pair.esmFile}\`](${pair.esmRel}) | ${eBadge} (${eInst}) | ${pair.note} |\n`;
-  }
-
-  md += `\n---\n\n`;
-
-  // =========================================================================
-  // VIEW 4: Results Grouped by 3-Way Combinations (Detailed 8 Groups)
-  // =========================================================================
-  md += `## View 4: Results Grouped by 3-Way Combinations\n\n`;
+  md += `## Summary Statistics Across Combinations\n\n`;
+  md += `| Combination | Inlined / Total | Optimization Rate |\n`;
+  md += `| :--- | :---: | :---: |\n`;
 
   const comboStats = [];
   let grandTotal = 0;
@@ -503,9 +295,6 @@ function main() {
 
   for (const combo of COMBINATIONS) {
     console.log(`\n\x1b[1;36m=== ${combo.label} ===\x1b[0m`);
-    md += `### ${combo.label}\n\n`;
-    md += `| Usage Type | Consumer Test File | Target Function Module | Inlined? | Target Instruction | Code Size | Notes |\n`;
-    md += `| :---: | :--- | :--- | :---: | :--- | :---: | :--- |\n`;
 
     const relevantSuites = SUITES.filter(s => s.funcType === combo.funcType && s.constSource === combo.constSource);
     let comboTotal = 0;
@@ -526,31 +315,13 @@ function main() {
           grandInlined++;
         }
 
-        const funcExt = combo.funcType === 'cjs' ? '.cjs' : '.mjs';
-        const funcFilename = file.replace(/\.(cjs|mjs)$/, funcExt);
-        const consumerRelPath = `../consumers/${combo.consumerType}/${combo.funcType}/${combo.constSource}/${suite.usageType}/${file}`;
-        const funcRelPath = `../functions/${combo.funcType}/${combo.constSource}/${suite.usageType}/${funcFilename}`;
-
-        const badge = res.immediateInlined ? '✅ **YES**' : '❌ **NO**';
-        const sizeStr = res.codeSize ? `${res.codeSize} B` : 'N/A';
-        const instStr = res.targetSnippet ? `\`${res.targetSnippet}\`` : 'N/A';
-        const noteStr = res.note || 'N/A';
-
         const statusConsole = res.immediateInlined ? '\x1b[32mYES\x1b[0m' : '\x1b[31mNO \x1b[0m';
         console.log(`  [${suite.usageType.padEnd(7)}] ${file.padEnd(24)} | Inlined: ${statusConsole} | Size: ${(res.codeSize + 'B').padStart(5)} | ${res.targetSnippet}`);
-
-        md += `| \`${suite.usageType}\` | [\`${file}\`](${consumerRelPath}) | [\`${funcFilename}\`](${funcRelPath}) | ${badge} | ${instStr} | ${sizeStr} | ${noteStr} |\n`;
       }
     }
 
-    md += `\n**Subtotal**: ${comboInlined} / ${comboTotal} Inlined (${Math.round((comboInlined / comboTotal) * 100)}%)\n\n`;
     comboStats.push({ label: combo.label, inlined: comboInlined, total: comboTotal });
   }
-
-  // Summary Statistics Table
-  md += `---\n\n## Summary Statistics Across Combinations\n\n`;
-  md += `| Combination | Inlined / Total | Optimization Rate |\n`;
-  md += `| :--- | :---: | :---: |\n`;
 
   for (const stat of comboStats) {
     const rate = Math.round((stat.inlined / stat.total) * 100);
