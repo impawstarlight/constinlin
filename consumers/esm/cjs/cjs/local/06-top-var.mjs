@@ -1,4 +1,4 @@
-import { mask } from '#functions/cjs/cjs/local/06-top-var.cjs';
+import mask from '#functions/cjs/cjs/local/06-top-var.cjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

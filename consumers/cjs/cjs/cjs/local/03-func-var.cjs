@@ -1,4 +1,4 @@
-const { mask } = require('#functions/cjs/cjs/local/03-func-var.cjs');
+const mask = require('#functions/cjs/cjs/local/03-func-var.cjs');
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

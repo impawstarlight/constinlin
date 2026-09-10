@@ -1,4 +1,4 @@
-import { mask } from '#functions/esm/cjs/default/04-rebind-let.mjs';
+import mask from '#functions/esm/cjs/default/04-rebind-let.mjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

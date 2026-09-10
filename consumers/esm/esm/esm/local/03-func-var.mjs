@@ -1,4 +1,4 @@
-import { mask } from '#functions/esm/esm/local/03-func-var.mjs';
+import mask from '#functions/esm/esm/local/03-func-var.mjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

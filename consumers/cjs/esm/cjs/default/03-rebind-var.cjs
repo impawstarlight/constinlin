@@ -1,4 +1,4 @@
-const { mask } = require('#functions/esm/cjs/default/03-rebind-var.mjs');
+const mask = require('#functions/esm/cjs/default/03-rebind-var.mjs').default;
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

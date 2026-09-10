@@ -1,4 +1,4 @@
-import { mask } from '#functions/esm/esm/named/04-rebind-var.mjs';
+import mask from '#functions/esm/esm/named/04-rebind-var.mjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

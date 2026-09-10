@@ -1,4 +1,4 @@
-import { mask } from '#functions/esm/esm/local/07-top-let.mjs';
+import mask from '#functions/esm/esm/local/07-top-let.mjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

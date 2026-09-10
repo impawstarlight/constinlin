@@ -1,4 +1,4 @@
-const { mask } = require('#functions/esm/esm/named/02-namespace.mjs');
+const mask = require('#functions/esm/esm/named/02-namespace.mjs').default;
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

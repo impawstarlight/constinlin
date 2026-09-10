@@ -1,4 +1,4 @@
-import { mask } from '#functions/cjs/cjs/local/07-top-let.cjs';
+import mask from '#functions/cjs/cjs/local/07-top-let.cjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

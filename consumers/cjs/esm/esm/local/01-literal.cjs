@@ -1,4 +1,4 @@
-const { mask } = require('#functions/esm/esm/local/01-literal.mjs');
+const mask = require('#functions/esm/esm/local/01-literal.mjs').default;
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

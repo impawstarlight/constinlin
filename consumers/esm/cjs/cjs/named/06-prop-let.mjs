@@ -1,4 +1,4 @@
-import { mask } from '#functions/cjs/cjs/named/06-prop-let.cjs';
+import mask from '#functions/cjs/cjs/named/06-prop-let.cjs';
 
 %PrepareFunctionForOptimization(mask);
 mask(1);

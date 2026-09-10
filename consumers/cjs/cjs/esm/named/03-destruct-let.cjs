@@ -1,4 +1,4 @@
-const { mask } = require('#functions/cjs/esm/named/03-destruct-let.cjs');
+const mask = require('#functions/cjs/esm/named/03-destruct-let.cjs');
 
 %PrepareFunctionForOptimization(mask);
 mask(1);
