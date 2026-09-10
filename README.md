@@ -98,21 +98,30 @@ constinlin/
 ### 1. Consumer Independence
 - **CJS Consumer vs ESM Consumer produces identical optimization for `mask`**:
   - Whether a consumer uses CommonJS `require()` or ESM `import` to consume `mask`, TurboFan generates **identical machine code** for the `mask` function (62% inlining across both consumer types).
-  - TurboFan's constant inlining decisions are strictly governed by the lexical environment and module record where the function is **declared**, not by how the consumer imports or calls the function.
+  - TurboFan's constant inlining decisions are strictly governed by the lexical environment and module record where the function is **declared**, not by how the caller imports the function.
 
 ### 2. CommonJS Functions (`module.exports`)
-- **Top-level Destructuring (`const { MASK } = require(...)`)**: TurboFan inlines `MASK` directly into native machine code (zero-extension `movzx` for 8/16-bit masks or immediate `andl` for arbitrary masks).
-- **Property Access (`mod.MASK`)**: Inlined to native zero-extension / immediate because V8's hidden class (`Map`) tracks field constants when the exported object shape does not mutate.
+- **Top-level Destructuring (`const { MASK } = require(...)`)**: TurboFan inlines `MASK` directly into native machine instructions (e.g. zero-extension `movzx` or immediate `andl` on x86_64).
+- **Property Access (`mod.MASK`)**: Inlined to native instructions because V8's hidden class (`Map`) tracks scalar field constants when the exported module object does not mutate.
 
-### 3. ECMAScript Module Functions (`export function`)
-- **Direct Import (`import { MASK } from './mask.mjs'`)**: Does **NOT** inline into native instructions (`movzx` / immediate `andl`). TurboFan emits a dynamic module context slot load (`movq rcx, [cell + 0x7]`) followed by register bitwise AND (`andl rdx, rdi` / `andl r8, rcx`) because ESM imported bindings are live context bindings.
-- **Local Rebinding Workaround (`const MASK = _MASK`)**: Re-binding the imported identifier to a top-level lexical `const` inside the function's module eliminates runtime context lookups and completely restores native inlining (`movzx` zero-extension or immediate `andl`).
+### 3. ECMAScript Module Functions (`export default function`)
+- **Direct Import (`import { MASK } from './mask.mjs'`)**: Does **NOT** inline into native instructions. TurboFan emits a dynamic heap context lookup on every call (`movq rcx, [cell + 0x7]` followed by register `andl` on x86_64) because ESM exports are live bindings that can change at runtime.
+- **Local Rebinding Workaround (`const MASK = _MASK`)**: Re-binding the imported value to a top-level `const` inside the function's module eliminates the runtime lookup and completely restores native inlining.
 
-### 4. Instruction Selection
-- **Byte & Word Boundary Masks (`0xFF`, `0xFFFF`)**:
-  - `0xFF` $\rightarrow$ **`movzxbl rdx, rdx`** (x86_64 zero-extend byte) or **`uxtb`** (ARM64).
-  - `0xFFFF` $\rightarrow$ **`movzxwl rdx, rdx`** (x86_64 zero-extend word) or **`uxth`** (ARM64).
-- **Arbitrary Bitmasks (`0x1234`, `0xDEADBEEF`)**:
-  - `0x1234` $\rightarrow$ **`andl rdx, 0x1234`** (immediate operand bitwise AND).
-  - `0xDEADBEEF` $\rightarrow$ **`andl rdx, 0xdeadbeef`**.
+---
+
+## Instruction Selection (x86_64 Reference)
+
+> **Note**: The disassembly snippets and instructions shown below were measured on **x86_64** (`linux-x64`). While the inlining boundaries and optimization rates are identical across platforms, the exact CPU instructions emitted will differ depending on the target architecture (such as ARM64 / Apple Silicon).
+
+| Mask Pattern | Example Mask | x86_64 Machine Code | Summary |
+| :--- | :--- | :--- | :--- |
+| **8-bit Byte Boundary** | `0xFF` | `movzxbl rdx, rdx` | Zero-extends lower 8 bits (clears upper 56 bits). |
+| **16-bit Word Boundary** | `0xFFFF` | `movzxwl rdx, rdx` | Zero-extends lower 16 bits (clears upper 48 bits). |
+| **Arbitrary Bitmask** | `0x1234` | `andl rdx, 0x1234` | Immediate constant embedded directly into instruction stream. |
+| **32-bit Integer Mask** | `0xDEADBEEF` | `andl rdx, 0xdeadbeef` | 32-bit immediate operand bitwise AND. |
+| **Dynamic Context Load** *(ESM Live Binding)* | *Any* | `movq rdi, [cell + 0x7]`<br>`andl rdx, rdi` | Extra heap context dereference required on every call due to live export semantics. |
+
+
+
 
