@@ -100,21 +100,26 @@ function analyzeTestCase(filePath) {
   const sizeMatch = codeSection.match(/Instructions \(size = (\d+)\)/);
   const codeSize = sizeMatch ? parseInt(sizeMatch[1], 10) : null;
 
-  // Extract target operation instruction across architectures (x86_64 movzx/and, ARM64 uxt/ubf/and)
+  // Extract target operation instruction across architectures (x86_64 movzx/and, ARM64 and/uxt/ubf)
   const targetMatch = codeSection.match(/0x[0-9a-f]+\s+[0-9a-f]+\s+(?:[0-9a-f]+\s+)?(?:REX\.W\s+)?(movz[a-z0-9]+[^\r\n]+|uxt[a-z0-9]*[^\r\n]+|ubf[a-z0-9]*[^\r\n]+|and[a-z0-9]*[^\r\n]+)/i);
   const targetSnippet = targetMatch ? targetMatch[1].trim() : 'N/A';
 
-  const is16BitZeroExtend = /movzx?w[lq]?|uxth/i.test(targetSnippet);
-  const is8BitZeroExtend = /movzx?b[lq]?|uxtb/i.test(targetSnippet);
-  const isImmediateAnd = /and[a-z0-9]*\s+[^,]+,\s*(?:#|0x[0-9a-f]+|-?\d+)/i.test(targetSnippet) || /ubf[a-z0-9]*/i.test(targetSnippet);
+  // Operand-driven classification:
+  // 1. Zero-extend forms (x86 movzx, ARM64 uxt)
+  const isZeroExtend = /movz[a-z0-9]+|uxt[a-z0-9]*/i.test(targetSnippet);
+  // 2. Immediate operand forms:
+  //    - ARM64: #0x... or #<number> (e.g. #0xffff, #255)
+  //    - x86_64: 0x... or decimal integer following a comma
+  //    - Bitfield extract: ubfx / ubfm
+  const isImmediateAnd = /and[a-z0-9]*\s+[^,]+,\s*(?:#|0x[0-9a-f]+|-?\d+)/i.test(targetSnippet)
+    || /and[a-z0-9]*\s+[^,]+,\s*[^,]+,\s*(?:#|0x[0-9a-f]+|-?\d+)/i.test(targetSnippet)
+    || /ubf[a-z0-9]*/i.test(targetSnippet);
 
-  const immediateInlined = is16BitZeroExtend || is8BitZeroExtend || isImmediateAnd;
+  const immediateInlined = isZeroExtend || isImmediateAnd;
 
   let note = 'Dynamic context/property load';
-  if (is16BitZeroExtend) {
-    note = 'Inlined (16-bit zero-extend)';
-  } else if (is8BitZeroExtend) {
-    note = 'Inlined (8-bit zero-extend)';
+  if (isZeroExtend) {
+    note = /movzx?b|uxtb/i.test(targetSnippet) ? 'Inlined (8-bit zero-extend)' : 'Inlined (16-bit zero-extend)';
   } else if (isImmediateAnd) {
     note = 'Inlined (immediate operand)';
   }
@@ -138,10 +143,32 @@ function main() {
 
   console.log('='.repeat(95));
   console.log(` V8 TURBOFAN 3-WAY CONSTANT INLINING ANALYSIS (MASK = ${activeMask})`);
-  console.log(` Multi-Angle Views: Consumer Sensitivity | Constant Sensitivity | Function Sensitivity`);
   console.log(` Platform: ${platformArch} | Node: ${process.version} | V8: ${process.versions.v8}`);
   console.log('='.repeat(95));
   console.log();
+
+  // Pre-flight sanity check: 01-literal is mathematically guaranteed to inline
+  const guardPath = join(repoRoot, 'consumers', 'cjs', 'cjs', 'cjs', 'local', '01-literal.cjs');
+  const guardRes = analyzeTestCase(guardPath);
+
+  if (!guardRes.optimized || !guardRes.immediateInlined) {
+    console.error('\x1b[31m' + '='.repeat(95));
+    console.error(' ❌ PRE-FLIGHT SANITY CHECK FAILED ON 01-literal');
+    console.error('='.repeat(95) + '\x1b[0m');
+    console.error(` Platform:           ${platformArch}`);
+    console.error(` Node.js:            ${process.version}`);
+    console.error(` V8:                 ${process.versions.v8}`);
+    console.error(` Target Instruction: "${guardRes.targetSnippet}"`);
+    console.error(` Optimized:          ${guardRes.optimized}`);
+    console.error(` Immediate Inlined:  ${guardRes.immediateInlined}`);
+    if (guardRes.error) console.error(` Error:              ${guardRes.error}`);
+    console.error('\nTurboFan is expected to always inline the hardcoded literal in 01-literal.');
+    console.error('The runner instruction parser failed to recognize this instruction shape on this architecture.');
+    console.error('Aborting matrix execution to prevent emitting misleading false negative results.\n');
+    process.exit(1);
+  }
+
+  console.log(`\x1b[32m✔ Pre-flight sanity check passed (01-literal inlined: ${guardRes.targetSnippet})\x1b[0m\n`);
 
   // Execute all 100 test cases and store into memory structure
   // resultsMap[consumerType][funcType][constSource][usageType][filename] = res
