@@ -10,8 +10,7 @@
     "#scripts/*": "./scripts/*"
   },
   "scripts": {
-    "matrix": "node scripts/runner.js",
-    "set-mask": "node scripts/set-mask.js"
+    "matrix": "node scripts/runner.js"
   }
 }
 

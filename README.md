@@ -43,11 +43,6 @@ npm run matrix 0xDEADBEEF   # 32-bit test mask (generates results/0xDEADBEEF.md)
 npm run matrix 0x1234       # Arbitrary test mask (generates results/0x1234.md)
 ```
 
-### 3. Update Mask Across Files Without Running Analysis
-```bash
-npm run set-mask 0xFFFF
-```
-
 ---
 
 ## Directory Structure
