@@ -196,10 +196,10 @@ function main() {
       const esmInst = esmRes.targetSnippet ? `\`${esmRes.targetSnippet}\` (${esmRes.codeSize || 'N/A'} B)` : 'N/A';
 
       const delta = (cjsRes.immediateInlined === esmRes.immediateInlined && cjsRes.codeSize === esmRes.codeSize)
-        ? 'Identical'
+        ? '✅ Identical'
         : '⚠️ Different';
 
-      md += `| \`${suite.funcType.toUpperCase()}\` | \`${suite.constSource.toUpperCase()}\` | \`${suite.usageType}\` | [\`${funcFilename}\`](${funcRelPath}) | ${cjsBadge} | ${cjsInst} | ${esmBadge} | ${esmInst} | \`${delta}\` |\n`;
+      md += `| \`${suite.funcType.toUpperCase()}\` | \`${suite.constSource.toUpperCase()}\` | \`${suite.usageType}\` | [\`${funcFilename}\`](${funcRelPath}) | ${cjsBadge} | ${cjsInst} | ${esmBadge} | ${esmInst} | ${delta} |\n`;
     }
   }
 
@@ -224,9 +224,9 @@ function main() {
     const cInst = cjsConstRes.targetSnippet ? `\`${cjsConstRes.targetSnippet}\` (${cjsConstRes.codeSize} B)` : 'N/A';
     const eInst = esmConstRes.targetSnippet ? `\`${esmConstRes.targetSnippet}\` (${esmConstRes.codeSize} B)` : 'N/A';
     const delta = (cjsConstRes.immediateInlined === esmConstRes.immediateInlined && cjsConstRes.codeSize === esmConstRes.codeSize)
-      ? 'Identical'
+      ? '✅ Identical'
       : '⚠️ Different';
-    md += `| \`CJS\` | \`default\` | \`${f}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | \`${delta}\` |\n`;
+    md += `| \`CJS\` | \`default\` | \`${f}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | ${delta} |\n`;
   }
 
   const cjsFuncNamedFiles = ['01-destruct-const.cjs', '02-destruct-var.cjs', '03-destruct-let.cjs', '04-prop-const.cjs', '05-prop-var.cjs', '06-prop-let.cjs'];
@@ -240,9 +240,9 @@ function main() {
     const cInst = cjsConstRes.targetSnippet ? `\`${cjsConstRes.targetSnippet}\` (${cjsConstRes.codeSize} B)` : 'N/A';
     const eInst = esmConstRes.targetSnippet ? `\`${esmConstRes.targetSnippet}\` (${esmConstRes.codeSize} B)` : 'N/A';
     const delta = (cjsConstRes.immediateInlined === esmConstRes.immediateInlined && cjsConstRes.codeSize === esmConstRes.codeSize)
-      ? 'Identical'
+      ? '✅ Identical'
       : '⚠️ Different';
-    md += `| \`CJS\` | \`named\` | \`${f}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | \`${delta}\` |\n`;
+    md += `| \`CJS\` | \`named\` | \`${f}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | ${delta} |\n`;
   }
 
   // 2. ESM Function Constant Comparison
@@ -258,9 +258,9 @@ function main() {
     const cInst = cjsConstRes.targetSnippet ? `\`${cjsConstRes.targetSnippet}\` (${cjsConstRes.codeSize} B)` : 'N/A';
     const eInst = esmConstRes.targetSnippet ? `\`${esmConstRes.targetSnippet}\` (${esmConstRes.codeSize} B)` : 'N/A';
     const delta = (cjsConstRes.immediateInlined === esmConstRes.immediateInlined && cjsConstRes.codeSize === esmConstRes.codeSize)
-      ? 'Identical'
+      ? '✅ Identical'
       : '⚠️ Different';
-    md += `| \`ESM\` | \`default\` | \`${esmFilename}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | \`${delta}\` |\n`;
+    md += `| \`ESM\` | \`default\` | \`${esmFilename}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | ${delta} |\n`;
   }
 
   const esmFuncNamedFiles = ['01-import.cjs', '02-namespace.cjs', '03-rebind-const.cjs', '04-rebind-var.cjs', '05-rebind-let.cjs'];
@@ -275,9 +275,9 @@ function main() {
     const cInst = cjsConstRes.targetSnippet ? `\`${cjsConstRes.targetSnippet}\` (${cjsConstRes.codeSize} B)` : 'N/A';
     const eInst = esmConstRes.targetSnippet ? `\`${esmConstRes.targetSnippet}\` (${esmConstRes.codeSize} B)` : 'N/A';
     const delta = (cjsConstRes.immediateInlined === esmConstRes.immediateInlined && cjsConstRes.codeSize === esmConstRes.codeSize)
-      ? 'Identical'
+      ? '✅ Identical'
       : '⚠️ Different';
-    md += `| \`ESM\` | \`named\` | \`${esmFilename}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | \`${delta}\` |\n`;
+    md += `| \`ESM\` | \`named\` | \`${esmFilename}\` | ${cBadge} | ${cInst} | ${eBadge} | ${eInst} | ${delta} |\n`;
   }
 
   md += `\n---\n\n`;
